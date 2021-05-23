@@ -4,7 +4,6 @@ library(tidyr)
 library(stringr)
 library(plotly)
 library(ggrepel)
-#CHECK OUT PLOTLY, IT HAS INTERACTIVE PLOTS, IT IS ON 1-3 DATA VISUALISATIONS
 
 #Read the basketball data, taken from Sports Reference
 season2000 <- read.csv("2000.csv")
@@ -33,6 +32,7 @@ season2021 <- read.csv("2021.csv")
 
 
 #Join the individual regular season data into one big joined regular season 
+#First add the year into each dataframe so that when it joins it can distinguish the years 
 season2000 <- mutate(season2000, year = "2000")
 season2001 <- mutate(season2001, year = "2001")
 season2002 <- mutate(season2002, year = "2002")
@@ -55,6 +55,8 @@ season2018 <- mutate(season2018, year = "2018")
 season2019 <- mutate(season2019, year = "2019")
 season2020 <- mutate(season2020, year = "2020")
 season2021 <- mutate(season2021, year = "2021")
+
+#JoinedSeason is the dataframe that will contain all of the dataframes of each season
 joinedSeason <- full_join(season2010, season2011)
 joinedSeason <- joinedSeason %>% full_join(season2000)
 joinedSeason <- joinedSeason %>% full_join(season2001)
@@ -89,23 +91,7 @@ joinedSeason <- replace_na(joinedSeason, list(All.Stars = 0))
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-#Try to input playoff wins into joinedSeason
-
-
-
-
-#playoffSeries2 <- subset(playoffSeries, Yr >= 2010)
+#Now to add playoff data into the picture
 
 #Read the basketball data, taken from Sports Reference
 playoff2000 <- read.csv("playoff2000.csv")
@@ -153,6 +139,7 @@ playoff2018 <- mutate(playoff2018, year = "2018")
 playoff2019 <- mutate(playoff2019, year = "2019")
 playoff2020 <- mutate(playoff2020, year = "2020")
 
+#joinedPlayoffSeason is the equivalent of joinedSeason just for the playoffs
 #join all of the playoff series into one datatable
 joinedPlayoffSeason <- full_join(playoff2010, playoff2011)
 joinedPlayoffSeason <- joinedPlayoffSeason %>% full_join(playoff2000) 
@@ -204,14 +191,23 @@ joinedPlayoffSeason <- transmute(joinedPlayoffSeason,
                                  teamyear = paste(Team, year, sep = "_") )
 
 #mutate the joinedSeason so that there is an identifer that includes the team name and year
+#This is so that each Team during a particular season has a unique identifier 
 joinedSeason <- joinedSeason %>%  mutate(teamyear= paste(Team, year, sep="_"))
 
 #Finally join the playoff Stats with the regular season stats
 joinedSeason <- left_join(joinedSeason,joinedPlayoffSeason)
 
+#This is to remove the NAs in playoff games, basically just putting it in the database that there are no playoff games there
 joinedSeason <- replace_na(joinedSeason, list(playoffG = 0))
 joinedContendersSeason <- filter(joinedSeason, playoffG > 0)
 
+# 
+#
+#ALL OF THE PREVIOUS CODE WAS FOR HANDLING AND MANAGING THE DATA
+#BELOW IS MULTIPLE CALLS TO GGPLOT AND PLOTLY WHERE I PLOTTED MULTIPLE SETS OF DATA TO WINS AND PLAYOFF WINS TO SEE WHICH METRICS ARE HIGHLY CORRELATED TO WINNING 
+#MOST OF THE PLOTS ARE SCATTER PLOTS, IF IT MORE STRONGLY RESEMBLES A LINE, THEN IT IS STRONGLY CORRELATED AND VICE VERSA
+#
+#
 
 #plotly precursor variables 
 f1 <- list(
