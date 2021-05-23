@@ -6,6 +6,6 @@ Afterwards I took the playoff team data for each season and joined it into the e
 
 NBADataScript is where the actual R Code is written on 
 The CSV files all contain the basketball data taken from sports reference/basketball-reference.com
+There are png files with the plots I created using ggplot2 comparing different metrics to wins or playoff wins with a caption to explain the correlations
 
 
-As my data analysis skills improve, I plan to improve upon this to create more robust metrics to possibly predict playoff performance well
